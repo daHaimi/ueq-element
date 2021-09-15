@@ -1,0 +1,23 @@
+{
+  "code": "de-DE",
+  "description": "German - Germany",
+  "translations": {
+    "obstructive": "behindernd",
+    "supportive": "unterstützend",
+    "complicated": "kompliziert",
+    "easy": "einfach",
+    "inefficient": "ineffizient",
+    "efficient": "effizient",
+    "confusing": "verwirrend",
+    "clear": "übersichtlich",
+    "boring": "langweilig",
+    "exciting": "spannend",
+    "not interesting": "uninteressant",
+    "interesting": "interessant",
+    "conventional": "konventionell",
+    "inventive": "originell",
+    "usual": "herkömmlich",
+    "leading edge": "neuartig",
+    "error fields missing": "Alle Felder müssen gefüllt werden."
+  }
+}

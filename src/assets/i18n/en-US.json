@@ -1,0 +1,23 @@
+{
+  "code": "en-US",
+  "description": "English - United States",
+  "translations": {
+    "obstructive": "obstructive",
+    "supportive": "supportive",
+    "complicated": "complicated",
+    "easy": "easy",
+    "inefficient": "inefficient",
+    "efficient": "efficient",
+    "confusing": "confusing",
+    "clear": "clear",
+    "boring": "boring",
+    "exciting": "exciting",
+    "not interesting": "not interesting",
+    "interesting": "interesting",
+    "conventional": "conventional",
+    "inventive": "inventive",
+    "usual": "usual",
+    "leading edge": "leading edge",
+    "error fields missing": "All fields must be filled out."
+  }
+}

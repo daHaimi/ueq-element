@@ -1,0 +1,32 @@
+{
+  "name": "ueq-element",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "lib/ueq-element.js",
+  "module": "lib/ueq-element.esm.js",
+  "files": [
+    "lib",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Mathias Haimerl",
+  "license": "MIT",
+  "devDependencies": {
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.0.4",
+    "element-internals-polyfill": "^0.1.44",
+    "rollup": "^2.56.3",
+    "rollup-plugin-typescript2": "^0.30.0",
+    "typescript": "^4.4.3"
+  },
+  "dependencies": {
+    "lit": "^2.0.0-rc.4"
+  }
+}
