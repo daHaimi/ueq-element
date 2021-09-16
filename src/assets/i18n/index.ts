@@ -1,3 +1,6 @@
+import * as de_DE from './de-DE.json';
+import * as en_US from './en-US.json';
+
 export type TranslateFunc = (...params: string[]) => string;
 
 export type Translation = {
@@ -17,14 +20,14 @@ export type Languages = {
 
 const i18n: Languages = {
     de: {
-        de: await import('./de-DE.json'),
+        de: de_DE,
         // @ts-ignore
-        default: this.de
+        default: de_DE
     },
     en: {
-        us: await import('./en-US.json'),
+        us: en_US,
         // @ts-ignore
-        default: this.us
+        default: en_US
     },
 };
 

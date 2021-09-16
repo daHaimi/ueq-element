@@ -64,7 +64,13 @@ export class UeqElementWebcomponent extends LitElement {
       padding: 16px;
       max-width: 800px;
     }
-  `;
+
+    .container {
+        display: grid;
+        grid-template-columns: 2fr repeat(7, 1fr) 2fr;
+        grid-template-rows: auto;
+    }
+    `;
 
     /**
      * The number of times the button has been clicked.
@@ -73,25 +79,28 @@ export class UeqElementWebcomponent extends LitElement {
     count = 0;
 
     private renderItem(item: UeqItem) {
-        const contents = "1234567";
-        return `<span @click="${this._onClick}" class="minimum">${this._t(item.low)}</span>
+        const contents = new Array(7).fill(0).map((_,i) =>
+            html`<input type="radio" name="${item.name}" value="${i + 1}">`
+        );
+        console.log(contents);
+        return html`<span @click="${this.onClick}" class="minimum">${this._t(item.low)}</span>
         ${contents}
         <span class="maximum">${this._t(item.high)}</span>`;
     }
 
     private renderRows() {
-        return UeqContents[this.type].map(i => this.renderItem(i)).join();
+        return UeqContents[this.type].map(i => this.renderItem(i));
     }
 
     render() {
         return html`
-      <div class="content">
+      <div class="container">
         ${this.renderRows()}
       </div>
     `;
     }
 
-    private _onClick(evt: unknown) {
+    private onClick(evt: unknown) {
         console.log(evt);
         this.count++;
     }
@@ -111,7 +120,7 @@ export class UeqElementWebcomponent extends LitElement {
         // Split language if not unique
         if (this.lang.length != 2) {
             // Filter out IANA defined primary languages
-            const lang = this.lang.match(/^[ix]-(.*)$/i);
+            const lang = this.lang.match(/^[ix][_-](.*)$/i);
             if (lang) {
                 this.secondaryLang = lang[1].toLowerCase();
             } else {
