@@ -1,0 +1,27 @@
+:host {
+  display: block;
+  border: solid 1px gray;
+  padding: 16px;
+  max-width: 800px;
+  --shade-color: #eeeeee;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr 1fr;
+  grid-template-rows: auto;
+  &:nth-child(2n) {
+    background-color: var(--shade-color);
+  }
+
+  :first-child {
+    text-align: right;
+  }
+  :nth-child(2) {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+  }
+}
+

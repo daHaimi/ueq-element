@@ -3,21 +3,21 @@ import {LitElement, html, css} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {ElementInternals} from "element-internals-polyfill/dist/element-internals";
 import {i18n, TranslateFunc, Translation} from './assets/i18n';
-import {UeqContents, UeqEmotionType, UeqItem} from "./ueq.contents";
+import {UeqContents, UeqEmotionType, UeqModality} from "./ueq.contents";
+import style from './styles.scss';
 
 /**
- * An example element.
+ * The User Experience Questionnaire (UEQ) {@link https://www.ueq-online.org/} as WebComponent.
+ * Configurable to also suit the requirements for UEQ-S and UEQ+ {@link http://ueqplus.ueq-research.org/}
  *
- * @slot - This element has a slot
- * @csspart button - The button
  */
 @customElement('ueq-element')
 export class UeqElementWebcomponent extends LitElement {
-    private DEFAULT_LANG = 'en';
+    private static DEFAULT_LANG = 'en';
 
-
-    private _internals!: ElementInternals;
+    private internals!: ElementInternals;
     private _required = false;
+    private readonly valueIndexMap = new Map<number, number>();
     private secondaryLang = 'default';
     private trans!: Translation
 
@@ -31,8 +31,9 @@ export class UeqElementWebcomponent extends LitElement {
                 return value.toLowerCase();
             }
         }
-    }) type = UeqEmotionType.Short;
+    }) type = UeqEmotionType.Full;
     @property() name!: string;
+    @property({type: Boolean, attribute: 'named-values'}) namedValues = false;
 
     @property()
     get required() {
@@ -41,68 +42,78 @@ export class UeqElementWebcomponent extends LitElement {
     set required(isRequired: boolean) {
         const old = this._required;
         this._required = isRequired;
-        this._internals.ariaRequired = `${isRequired}`;
+        this.internals.ariaRequired = `${isRequired}`;
         this.requestUpdate('required', old);
     }
 
     constructor() {
         super();
         if (this.attachInternals != undefined) {
-            this._internals = this.attachInternals();
+            this.internals = this.attachInternals();
         }
         this.findLanguage();
     }
 
+    get form() { return this.internals.form; }
+    get validity() {return this.internals.validity; }
+    get validationMessage() {return this.internals.validationMessage; }
+    get willValidate() {return this.internals.willValidate; }
+    reportValidity() {return this.internals.reportValidity(); }
     static get formAssociated() {
         return true;
     }
-
-    static styles = css`
-    :host {
-      display: block;
-      border: solid 1px gray;
-      padding: 16px;
-      max-width: 800px;
+    get object(): object {
+        const result: { [key: string]: number } = {};
+        this.valueIndexMap.forEach((e, k) => result[this.namedValues ? UeqContents[this.type][k].name : k + 1] = e + 1);
+        return result;
     }
-
-    .container {
-        display: grid;
-        grid-template-columns: 2fr repeat(7, 1fr) 2fr;
-        grid-template-rows: auto;
+    get formData(): FormData {
+        const result = new FormData();
+        this.valueIndexMap.forEach((e, k) =>
+            result.set(`${this.name}[${this.namedValues ? UeqContents[this.type][k].name : k + 1}]`, `${e}`)
+        );
+        return result;
     }
-    `;
 
     /**
-     * The number of times the button has been clicked.
+     * Render a single row (modality) with translated extrema and event-bound selections
+     * @param mod {@type UeqItem} the modality object
+     * @param idx {@type number} the modality's index
+     * @private
      */
-    @property({type: Number})
-    count = 0;
-
-    private renderItem(item: UeqItem) {
+    private renderModality(mod: UeqModality, idx: number) {
         const contents = new Array(7).fill(0).map((_,i) =>
-            html`<input type="radio" name="${item.name}" value="${i + 1}">`
+            html`<input type="radio" name="${mod.name}" value="${i + 1}" @change="${this.onChange.bind(this, idx, i)}" />`
         );
-        console.log(contents);
-        return html`<span @click="${this.onClick}" class="minimum">${this._t(item.low)}</span>
-        ${contents}
-        <span class="maximum">${this._t(item.high)}</span>`;
+        return html`<div class="row">
+            <span class="minimum">${this._t(mod.low)}</span>
+            <span class="selections">${contents}</span>
+            <span class="maximum">${this._t(mod.high)}</span>
+        </div>`;
     }
 
-    private renderRows() {
-        return UeqContents[this.type].map(i => this.renderItem(i));
-    }
-
+    /**
+     * The internally called render method to create the content of the shadowRoot
+     */
     render() {
-        return html`
-      <div class="container">
-        ${this.renderRows()}
-      </div>
-    `;
+        return html`${UeqContents[this.type].map((i, idx) => this.renderModality(i, idx))}`;
     }
 
-    private onClick(evt: unknown) {
-        console.log(evt);
-        this.count++;
+    /**
+     * The internally called styles getter to render the shadowRoot CSS
+     */
+    static styles = style({ css });
+
+    /**
+     * Listener for selecting a single item
+     * @param name {@type string} the name of the selected item's modality
+     * @param rowIdx {@type number} the index of the selected item's modality
+     * @param itemIdx {@type number} the index of the selected item
+     * @private
+     */
+    private onChange(rowIdx: number, itemIdx: number) {
+        this.valueIndexMap.set(rowIdx, itemIdx);
+        this.internals.setFormValue(this.formData);
     }
 
     /**
@@ -116,7 +127,7 @@ export class UeqElementWebcomponent extends LitElement {
      */
     private findLanguage() {
         // Get closest lang
-        this.lang = this.closest('[lang]')?.getAttribute('lang') || this.DEFAULT_LANG;
+        this.lang = this.closest('[lang]')?.getAttribute('lang') || UeqElementWebcomponent.DEFAULT_LANG;
         // Split language if not unique
         if (this.lang.length != 2) {
             // Filter out IANA defined primary languages
@@ -124,7 +135,7 @@ export class UeqElementWebcomponent extends LitElement {
             if (lang) {
                 this.secondaryLang = lang[1].toLowerCase();
             } else {
-                this.lang = this.DEFAULT_LANG;
+                this.lang = UeqElementWebcomponent.DEFAULT_LANG;
             }
         }
         this.trans = this.resolveLanguage();
@@ -146,7 +157,7 @@ export class UeqElementWebcomponent extends LitElement {
                 return i18n[this.lang].default;
             }
         }
-        return i18n[this.DEFAULT_LANG].default;
+        return i18n[UeqElementWebcomponent.DEFAULT_LANG].default;
     }
 
     /**

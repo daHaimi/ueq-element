@@ -19,6 +19,7 @@
   "author": "Mathias Haimerl",
   "license": "MIT",
   "devDependencies": {
+    "@ponday/rollup-plugin-lit-sass": "^1.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
     "element-internals-polyfill": "^0.1.44",

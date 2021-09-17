@@ -1,6 +1,7 @@
 import typescript from 'rollup-plugin-typescript2';
 import { nodeResolve } from '@rollup/plugin-node-resolve';
 import json from "@rollup/plugin-json";
+import litSass from "@ponday/rollup-plugin-lit-sass";
 
 export default [
   {
@@ -13,7 +14,8 @@ export default [
     plugins: [
       nodeResolve(),
       json(),
-      typescript()
+      typescript(),
+      litSass()
     ],
   },
 ]
