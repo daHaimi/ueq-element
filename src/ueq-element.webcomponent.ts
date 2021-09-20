@@ -5,6 +5,7 @@ import {ElementInternals} from "element-internals-polyfill/dist/element-internal
 import {i18n, TranslateFunc, Translation} from './assets/i18n';
 import {UeqContents, UeqEmotionType, UeqModality} from "./ueq.contents";
 import style from './styles.scss';
+import {PropertyValues} from "@lit/reactive-element";
 
 /**
  * The User Experience Questionnaire (UEQ) {@link https://www.ueq-online.org/} as WebComponent.
@@ -36,12 +37,15 @@ export class UeqElementWebcomponent extends LitElement {
     @property({type: Boolean, attribute: 'named-values'}) namedValues = false;
 
     @property()
-    get required() {
+    get required(): boolean {
         return this._required;
     }
-    set required(isRequired: boolean) {
+    set required(isRequired: unknown) {
+        if (typeof isRequired === 'string' && isRequired !== 'false') {
+            isRequired = true;
+        }
         const old = this._required;
-        this._required = isRequired;
+        this._required = isRequired as boolean;
         this.internals.ariaRequired = `${isRequired}`;
         this.requestUpdate('required', old);
     }
@@ -52,6 +56,11 @@ export class UeqElementWebcomponent extends LitElement {
             this.internals = this.attachInternals();
         }
         this.findLanguage();
+    }
+
+    protected firstUpdated(_changedProperties: PropertyValues): void {
+        super.firstUpdated(_changedProperties);
+        this.validateInternals();
     }
 
     get form() { return this.internals.form; }
@@ -106,7 +115,6 @@ export class UeqElementWebcomponent extends LitElement {
 
     /**
      * Listener for selecting a single item
-     * @param name {@type string} the name of the selected item's modality
      * @param rowIdx {@type number} the index of the selected item's modality
      * @param itemIdx {@type number} the index of the selected item
      * @private
@@ -114,6 +122,30 @@ export class UeqElementWebcomponent extends LitElement {
     private onChange(rowIdx: number, itemIdx: number) {
         this.valueIndexMap.set(rowIdx, itemIdx);
         this.internals.setFormValue(this.formData);
+        this.validateInternals();
+    }
+
+    /**
+     * Validate the current input state according to the configuration
+     * @private
+     */
+    private validateInternals(): void {
+        if (this.required) {
+            const firstElement = this.shadowRoot?.querySelector('input') as HTMLInputElement;
+            // No element selected
+            if (this.valueIndexMap.size === 0) {
+                return this.internals.setValidity({
+                    valueMissing: true
+                }, this._t('error field required'), firstElement);
+            }
+            if (this.valueIndexMap.size !== UeqContents[this.type].length) {
+                return this.internals.setValidity({
+                    tooShort: true,
+                    valueMissing: true
+                }, this._t('error fields missing'), firstElement);
+            }
+        }
+        this.internals.setValidity({});
     }
 
     /**
@@ -152,7 +184,6 @@ export class UeqElementWebcomponent extends LitElement {
                 return i18n[this.lang][this.secondaryLang];
             }
             // if secondary does not, select default
-
             if (i18n[this.lang].hasOwnProperty('default')) {
                 return i18n[this.lang].default;
             }

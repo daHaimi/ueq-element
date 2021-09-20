@@ -54,6 +54,8 @@
     "unfriendly": "unfriendly",
     "conservative": "conservative",
     "innovative": "innovative",
+
+    "error field required": "This field is required.",
     "error fields missing": "All fields must be filled out."
   }
 }
