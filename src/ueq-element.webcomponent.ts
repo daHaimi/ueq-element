@@ -6,11 +6,11 @@ import {i18n, TranslateFunc, Translation} from './assets/i18n';
 import {UeqContents, UeqEmotionType, UeqModality} from "./ueq.contents";
 import style from './styles.scss';
 import {PropertyValues} from "@lit/reactive-element";
+import {ValidityState} from "element-internals-polyfill/dist/ValidityState";
 
 /**
  * The User Experience Questionnaire (UEQ) {@link https://www.ueq-online.org/} as WebComponent.
  * Configurable to also suit the requirements for UEQ-S and UEQ+ {@link http://ueqplus.ueq-research.org/}
- *
  */
 @customElement('ueq-element')
 export class UeqElementWebcomponent extends LitElement {
@@ -63,14 +63,12 @@ export class UeqElementWebcomponent extends LitElement {
         this.validateInternals();
     }
 
-    get form() { return this.internals.form; }
-    get validity() {return this.internals.validity; }
-    get validationMessage() {return this.internals.validationMessage; }
-    get willValidate() {return this.internals.willValidate; }
-    reportValidity() {return this.internals.reportValidity(); }
-    static get formAssociated() {
-        return true;
-    }
+    static get formAssociated() { return true; }
+    get form(): HTMLFormElement { return this.internals.form; }
+    get validity(): ValidityState { return this.internals.validity; }
+    get validationMessage(): string { return this.internals.validationMessage; }
+    get willValidate(): boolean { return this.internals.willValidate; }
+    reportValidity(): boolean { return this.internals.reportValidity(); }
     get object(): object {
         const result: { [key: string]: number } = {};
         this.valueIndexMap.forEach((e, k) => result[this.namedValues ? UeqContents[this.type][k].name : k + 1] = e + 1);
@@ -82,6 +80,9 @@ export class UeqElementWebcomponent extends LitElement {
             result.set(`${this.name}[${this.namedValues ? UeqContents[this.type][k].name : k + 1}]`, `${e}`)
         );
         return result;
+    }
+    get translation(): Translation {
+        return this.trans;
     }
 
     /**
@@ -163,9 +164,10 @@ export class UeqElementWebcomponent extends LitElement {
         // Split language if not unique
         if (this.lang.length != 2) {
             // Filter out IANA defined primary languages
-            const lang = this.lang.match(/^[ix][_-](.*)$/i);
+            const lang = this.lang.match(/^([ix]|[a-z]{2})[_-](.*)$/i);
             if (lang) {
-                this.secondaryLang = lang[1].toLowerCase();
+                this.lang = lang[1].toLowerCase();
+                this.secondaryLang = lang[2].toLowerCase();
             } else {
                 this.lang = UeqElementWebcomponent.DEFAULT_LANG;
             }
@@ -214,3 +216,6 @@ declare global {
         'ueq-element': UeqElementWebcomponent;
     }
 }
+
+// Reexport i18n
+export { i18n };

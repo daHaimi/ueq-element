@@ -13,16 +13,20 @@
   ],
   "scripts": {
     "build": "rollup -c",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "rollup -c && web-test-runner \"test/**/*.spec.js\" --node-resolve --watch --coverage"
   },
   "keywords": [],
   "author": "Mathias Haimerl",
   "license": "MIT",
   "devDependencies": {
+    "@open-wc/testing": "^2.5.33",
     "@ponday/rollup-plugin-lit-sass": "^1.0.4",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.0.4",
+    "@web/dev-server-esbuild": "^0.2.14",
+    "@web/test-runner": "^0.13.17",
     "element-internals-polyfill": "^0.1.44",
+    "esbuild-sass-plugin": "^1.5.5",
     "rollup": "^2.56.3",
     "rollup-plugin-typescript2": "^0.30.0",
     "typescript": "^4.4.3"
