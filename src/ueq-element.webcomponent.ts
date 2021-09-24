@@ -137,13 +137,13 @@ export class UeqElementWebcomponent extends LitElement {
             if (this.valueIndexMap.size === 0) {
                 return this.internals.setValidity({
                     valueMissing: true
-                }, this._t('error field required'), firstElement);
+                }, this._t('This field is required.'), firstElement);
             }
             if (this.valueIndexMap.size !== UeqContents[this.type].length) {
                 return this.internals.setValidity({
                     tooShort: true,
                     valueMissing: true
-                }, this._t('error fields missing'), firstElement);
+                }, this._t('All fields must be filled out.'), firstElement);
             }
         }
         this.internals.setValidity({});
