@@ -2,11 +2,12 @@ import 'element-internals-polyfill/dist'
 import {LitElement, html, css} from 'lit';
 import {property, customElement} from 'lit/decorators.js';
 import {ElementInternals} from "element-internals-polyfill/dist/element-internals";
-import {i18n, TranslateFunc, Translation} from './assets/i18n';
+import {i18n} from './assets/i18n';
 import {UeqContents, UeqEmotionType, UeqModality} from "./ueq.contents";
 import style from './styles.scss';
 import {PropertyValues} from "@lit/reactive-element";
 import {ValidityState} from "element-internals-polyfill/dist/ValidityState";
+import {TranslateFunc, Translation} from "./assets/i18n/i18n";
 
 /**
  * The User Experience Questionnaire (UEQ) {@link https://www.ueq-online.org/} as WebComponent.
