@@ -1,4 +1,5 @@
 # ueq-element
+A [WebComponent](https://www.webcomponents.org/) to support a configurable [User Experience Questionnaire (UEQ)](https://www.ueq-online.org).
 
 <p align="center">
   <img src="https://github.com/daHaimi/ueq-element/actions/workflows/build-wc.yml/badge.svg" alt="Build WebComponent" />
@@ -7,7 +8,6 @@
   <a href="https://www.webcomponents.org/element/ueq-element"><img src="https://img.shields.io/badge/webcomponents.org-published-blue.svg" alt="Published on webcomponents.org" /></a>
 </p>
 
-A [WebComponent](https://www.webcomponents.org/) to support a configurable [User Experience Questionnaire (UEQ)](https://www.ueq-online.org).
 It supports the default 26-item version and the shorter 8-item version (UEQ-S).
 It allows for extensive configuration through custom [attributes](#Attributes).
 
