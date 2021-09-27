@@ -1,6 +1,6 @@
 {
   "name": "ueq-element",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "type": "module",
   "main": "src/ueq-element.js",
@@ -14,6 +14,10 @@
   "scripts": {
     "build": "rollup -c",
     "test": "rollup -c && web-test-runner \"test/**/*.spec.js\" --node-resolve --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daHaimi/ueq-element"
   },
   "keywords": [],
   "author": "Mathias Haimerl",
