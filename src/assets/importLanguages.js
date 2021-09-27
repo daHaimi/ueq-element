@@ -2,7 +2,7 @@ import fs from 'fs';
 const SEPARATOR = '~';
 const loadTsv = (filename) => {
   return fs.readFileSync(filename).toString().split(/\r?\n/).reduce((prev, cur) => {
-    const verbs = cur.split(SEPARATOR);
+    const verbs = cur.split(SEPARATOR).map(t => t.trim());
     const lang = verbs.shift();
     if (lang !== 'Key' && lang !== '') {
       prev[lang] = verbs;
