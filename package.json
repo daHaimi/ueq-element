@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "lib/ueq-element.js",
+  "main": "src/ueq-element.js",
   "module": "lib/ueq-element.esm.js",
   "files": [
     "lib",
