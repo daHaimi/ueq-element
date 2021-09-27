@@ -70,7 +70,7 @@ export class UeqElementWebcomponent extends LitElement {
     get validationMessage(): string { return this.internals.validationMessage; }
     get willValidate(): boolean { return this.internals.willValidate; }
     reportValidity(): boolean { return this.internals.reportValidity(); }
-    get object(): object {
+    get values(): object {
         const result: { [key: string]: number } = {};
         this.valueIndexMap.forEach((e, k) => result[this.namedValues ? UeqContents[this.type][k].name : k + 1] = e + 1);
         return result;

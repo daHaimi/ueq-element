@@ -16,7 +16,7 @@ describe('UEQ Element e2e test', () => {
         expect(ueqElement.getAttribute('name')).equal('ueq-test');
         // Initial value is null
         expect(ueqElement.getAttribute('value')).equal(null);
-        expect(ueqElement.object).to.deep.eq({});
+        expect(ueqElement.values).to.deep.eq({});
         // All fields exist and are empty
         const elements = ueqElement.shadowRoot.querySelectorAll('input[type=radio]');
         expect(elements.length).to.equal(26 * 7);
@@ -34,23 +34,57 @@ describe('UEQ Element e2e test', () => {
         expect(ueqElement.validity.valid).to.eq(true);
     });
 
-    const assertGerman = (ueqElement) => {
-        expect(ueqElement).to.be.instanceOf(UeqElementWebcomponent);
-        // Translations are english by default
-        expect(ueqElement.translation.code).to.eq('de-DE');
-        const textValues = [
-            ...ueqElement.shadowRoot.querySelectorAll('span.minimum'),
-            ...ueqElement.shadowRoot.querySelectorAll('span.maximum')
-        ].map(el => el.innerText);
-        expect(textValues.length).to.equal(26 * 2);
+    describe('Short version', async () => {
+        const elName = 'ueq-test';
+        const assertShort = async (ueqElement) => {
+            expect(ueqElement).to.be.instanceOf(UeqElementWebcomponent);
+            expect(ueqElement.getAttribute('name')).equal('ueq-test');
+            // Initial value is null
+            expect(ueqElement.getAttribute('value')).equal(null);
+            expect(ueqElement.values).to.deep.eq({});
+            // All fields exist and are empty
+            const elements = ueqElement.shadowRoot.querySelectorAll('input[type=radio]');
+            expect(elements.length).to.equal(8 * 7);
+            // Translations are english by default
+            expect(ueqElement.translation.code).to.eq('en-US');
+            const textValues = [
+                ...ueqElement.shadowRoot.querySelectorAll('span.minimum'),
+                ...ueqElement.shadowRoot.querySelectorAll('span.maximum')
+            ].map(el => el.innerText);
+            const trans = Object.values(i18n.en.default.translations);
+            textValues.forEach(v => {
+                expect(trans).to.include(v);
+            })
+            // Non-required field is valid by default
+            expect(ueqElement.validity.valid).to.eq(true);
+        };
 
-        const trans = Object.values(i18n.de.default.translations);
-        textValues.forEach(v => {
-            expect(trans).to.include(v);
+        it('1. Standard', async () => {
+            assertShort(await fixture(`<${TAG_NAME} name="${elName}" type="Short"></${TAG_NAME}>`));
         });
-    }
+
+        it('2. Lowercase', async () => {
+            assertShort(await fixture(`<${TAG_NAME} name="${elName}" type="short"></${TAG_NAME}>`));
+        });
+    });
+
 
     describe('language changed tio german', async () => {
+        const assertGerman = (ueqElement) => {
+            expect(ueqElement).to.be.instanceOf(UeqElementWebcomponent);
+            // Translations are english by default
+            expect(ueqElement.translation.code).to.eq('de-DE');
+            const textValues = [
+                ...ueqElement.shadowRoot.querySelectorAll('span.minimum'),
+                ...ueqElement.shadowRoot.querySelectorAll('span.maximum')
+            ].map(el => el.innerText);
+            expect(textValues.length).to.equal(26 * 2);
+
+            const trans = Object.values(i18n.de.default.translations);
+            textValues.forEach(v => {
+                expect(trans).to.include(v);
+            });
+        }
         const elName = 'ueq-test';
         describe('Case 1: Setting on element', async () => {
             it('Explicit', async () => {
