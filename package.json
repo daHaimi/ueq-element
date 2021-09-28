@@ -1,6 +1,6 @@
 {
   "name": "ueq-element",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "",
   "type": "module",
   "main": "src/ueq-element.js",
@@ -13,6 +13,7 @@
   ],
   "scripts": {
     "build": "rollup -c",
+    "postbuild": "node util/listNames.js",
     "test": "rollup -c && web-test-runner \"test/**/*.spec.js\" --node-resolve --coverage"
   },
   "repository": {

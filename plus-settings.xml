@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- compact="true" überspringt die Fragen nach Wichtigkeit -->
+<!-- auto-skip="N" reduziert die Items pro Skala auf N (letzte werden entfernt); N ∈ [2, 4] -->
+<ueq-plus compact="true" auto-skip="3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="plus-settings.xsd">
+    <!-- skip-scale lässt eine Skala aus -->
+    <skip-scale name="clarity" />
+    <skip-scale name="trust">
+        <!-- skip-item lässt ein item der Skala aus -->
+        <skip-item>2</skip-item>
+        <skip-item>3</skip-item>
+    </skip-scale>
+</ueq-plus>

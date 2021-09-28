@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="skip-item">
+    <xs:simpleType>
+      <xs:restriction base="xs:unsignedInt">
+        <xs:enumeration value="1"/>
+        <xs:enumeration value="2"/>
+        <xs:enumeration value="3"/>
+        <xs:enumeration value="4"/>
+      </xs:restriction>
+    </xs:simpleType>
+  </xs:element>
+  <xs:element name="skip-scale">
+    <xs:complexType mixed="true">
+      <xs:sequence>
+        <xs:element ref="skip-item" maxOccurs="2" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>skip-item lässt ein item der Skala aus</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute type="xs:string" name="name" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ueq-plus">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="skip-scale" maxOccurs="unbounded" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>skip-scale skips one specified scale</xs:documentation>
+          </xs:annotation>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute type="xs:boolean" name="compact" default="false">
+        <xs:annotation>
+          <xs:documentation>if compact is set to "true", importance questions are being skipped</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="auto-skip">
+        <xs:annotation>
+          <xs:documentation>auto-skip="N" reduces the items per scale to N. Items are skipped from last</xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:unsignedInt">
+            <xs:enumeration value="1"/>
+            <xs:enumeration value="2"/>
+            <xs:enumeration value="3"/>
+            <xs:enumeration value="4"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
