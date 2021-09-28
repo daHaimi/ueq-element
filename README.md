@@ -18,7 +18,7 @@ It allows for extensive configuration through custom [attributes](#Attributes).
 ```
 <custom-element-demo>
   <template>
-    <script type="module" src="lib/ueq-element.esm.js"></script>
+    <script type="module" src="https://cdn.jsdelivr.net/npm/ueq-element/lib/ueq-element.esm.js"></script>
     <next-code-block></next-code-block>
   </template>
 </custom-element-demo>

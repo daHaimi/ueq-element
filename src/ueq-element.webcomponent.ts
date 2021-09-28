@@ -1,6 +1,6 @@
 import 'element-internals-polyfill/dist'
-import {LitElement, html, css} from 'lit';
-import {property, customElement} from 'lit/decorators.js';
+import {css, html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {ElementInternals} from "element-internals-polyfill/dist/element-internals";
 import {i18n} from './assets/i18n';
 import {UeqContents, UeqEmotionType, UeqModality} from "./ueq.contents";
@@ -36,6 +36,17 @@ export class UeqElementWebcomponent extends LitElement {
     }) type = UeqEmotionType.Full;
     @property() name!: string;
     @property({type: Boolean, attribute: 'named-values'}) namedValues = false;
+    @property({
+        attribute: 'skip-scales',
+        converter: {
+            fromAttribute(value: string | null): string[] {
+                return value?.split(',').map(v => v.toLowerCase()) || [];
+            },
+            toAttribute(value: string[]): string {
+                return value.join(',');
+            }
+        }
+    }) skippedPlusScales: string[] = [];
 
     @property()
     get required(): boolean {
@@ -61,6 +72,7 @@ export class UeqElementWebcomponent extends LitElement {
 
     protected firstUpdated(_changedProperties: PropertyValues): void {
         super.firstUpdated(_changedProperties);
+        console.log(this.skippedPlusScales);
         this.validateInternals();
     }
 
@@ -107,7 +119,13 @@ export class UeqElementWebcomponent extends LitElement {
      * The internally called render method to create the content of the shadowRoot
      */
     render() {
-        return html`${UeqContents[this.type].map((i, idx) => this.renderModality(i, idx))}`;
+        if (this.type !== UeqEmotionType.Plus) {
+            return html`${UeqContents[this.type].map(
+                (i, idx) => this.renderModality(i as UeqModality, idx)
+            )}`;
+        } else {
+            return `Not implmented!`;
+        }
     }
 
     /**
