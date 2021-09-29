@@ -36,6 +36,7 @@ export class UeqElementWebcomponent extends LitElement {
     }) type = UeqEmotionType.Full;
     @property() name!: string;
     @property({type: Boolean, attribute: 'named-values'}) namedValues = false;
+    @property({type: Boolean, attribute: 'omit-empty'}) omitEmpty = false;
     @property({
         attribute: 'skip-scales',
         converter: {
